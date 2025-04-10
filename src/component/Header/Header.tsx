@@ -3,7 +3,7 @@ import { NavLink } from 'react-router';
 
 function Header() {
   return (
-    <div className='w-full p-3 flex gap-2 rounded-2xl'>
+    <div className='p-3 flex gap-2 bg-white rounded-xl shadow-sm h-16'>
       <Button>
         <NavLink to='/issues'>Все задачи</NavLink>
       </Button>
