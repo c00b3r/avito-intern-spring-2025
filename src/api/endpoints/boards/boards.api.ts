@@ -1,9 +1,9 @@
 import { axiosClient } from '../../axios/axios-client';
-import { Board, BoardTask } from './boards.types';
+import { BoardResponse, BoardTask } from './boards.types';
 
 export const boardsApi = {
   getAllBoards: async () => {
-    const response = await axiosClient.get<Board[]>('/boards');
+    const response = await axiosClient.get<BoardResponse>('/boards');
     return response.data;
   },
   getBoardById: async (boardId: string) => {
