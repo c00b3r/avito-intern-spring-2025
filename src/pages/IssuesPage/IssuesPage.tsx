@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   Cascader,
+  Empty,
   Flex,
   Input,
   Space,
@@ -26,6 +27,7 @@ import {
 
 function IssuesPage() {
   const { data: tasks, error, isLoading } = useTasks();
+  const tasksData = tasks?.data || null;
 
   if (isLoading) {
     return (
@@ -47,7 +49,7 @@ function IssuesPage() {
     <Card>
       <Space direction='vertical' className='w-full'>
         <Flex justify='space-between'>
-          <Badge color='blue' count={tasks?.data.length}>
+          <Badge color='blue' count={tasksData?.length || 0}>
             <Title level={3}>Задачи</Title>
           </Badge>
           <Flex gap='middle'>
@@ -56,24 +58,29 @@ function IssuesPage() {
             <Button type='primary'>Добавить задачу</Button>
           </Flex>
         </Flex>
-        {tasks &&
-          tasks.data.map((task) => (
-            <Card key={task.id} hoverable className='w-full'>
-              <Tag
-                color={statusColors[task.status]}
-                icon={<CarryOutOutlined />}
-              >
-                {statusName[task.status]}
-              </Tag>
-              <Tag
-                color={priorityColors[task.priority]}
-                icon={<FundProjectionScreenOutlined />}
-              >
-                {priorityName[task.priority]}
-              </Tag>
-              <Title level={5}>{task.title}</Title>
-            </Card>
-          ))}
+        <Flex vertical className='h-[75vh] overflow-y-auto p-4!' gap='small'>
+          {tasksData ? (
+            tasksData.map((task) => (
+              <Card key={task.id} hoverable className='w-full'>
+                <Tag
+                  color={statusColors[task.status]}
+                  icon={<CarryOutOutlined />}
+                >
+                  {statusName[task.status]}
+                </Tag>
+                <Tag
+                  color={priorityColors[task.priority]}
+                  icon={<FundProjectionScreenOutlined />}
+                >
+                  {priorityName[task.priority]}
+                </Tag>
+                <Title level={5}>{task.title}</Title>
+              </Card>
+            ))
+          ) : (
+            <Empty description='Нет задач' />
+          )}
+        </Flex>
       </Space>
     </Card>
   );
