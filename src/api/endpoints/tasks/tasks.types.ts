@@ -1,5 +1,9 @@
 import { TaskPriority, TaskStatus } from '../../../types/enum';
 
+interface TaskResponse {
+  data: Task[];
+}
+
 interface Task {
   assignee: {
     avatarUrl: string;
@@ -28,4 +32,4 @@ interface UpdateTaskStatus {
   status: TaskStatus;
 }
 
-export type { Task, CreateTask, UpdateTaskStatus };
+export type { Task, CreateTask, UpdateTaskStatus, TaskResponse };

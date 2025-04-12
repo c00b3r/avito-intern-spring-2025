@@ -1,10 +1,12 @@
 import { LoadingOutlined } from '@ant-design/icons';
-import { Alert, Card, Space, Spin } from 'antd';
+import { Alert, Badge, Button, Card, Flex, Space, Spin } from 'antd';
 import { useBoards } from '../../api/hooks/boards/queries';
 import Title from 'antd/es/typography/Title';
+import { useNavigate } from 'react-router';
 
 const BoardsPage = () => {
   const { data: boards, isLoading, error } = useBoards();
+  const navigate = useNavigate();
 
   if (isLoading) {
     return (
@@ -24,14 +26,27 @@ const BoardsPage = () => {
 
   return (
     <Card>
-      <Space direction='vertical' className='w-full'>
-        {boards &&
-          boards.data.map((board) => (
-            <Card key={board.id} hoverable>
-              <Title level={4}>{board.name}</Title>
-            </Card>
-          ))}
-      </Space>
+      <Flex vertical gap='middle'>
+        <Badge color='blue' count={boards?.data.length}>
+          <Title level={3}>Проекты</Title>
+        </Badge>
+        <Space direction='vertical' className='w-[50%]'>
+          {boards &&
+            boards.data.map((board) => (
+              <Card key={board.id}>
+                <Flex justify='space-between'>
+                  <Title level={4}>{board.name}</Title>
+                  <Button
+                    type='link'
+                    onClick={() => navigate(`/board/${board.id}`)}
+                  >
+                    Перейти к доске
+                  </Button>
+                </Flex>
+              </Card>
+            ))}
+        </Space>
+      </Flex>
     </Card>
   );
 };

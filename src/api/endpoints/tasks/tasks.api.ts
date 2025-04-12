@@ -1,10 +1,10 @@
 import { TaskStatus } from '../../../types/enum';
 import { axiosClient } from '../../axios/axios-client';
-import { CreateTask, Task } from './tasks.types';
+import { CreateTask, Task, TaskResponse } from './tasks.types';
 
 export const tasksApi = {
-  getAllTasks: async (): Promise<Task[]> => {
-    const { data } = await axiosClient.get<Task[]>('/tasks');
+  getAllTasks: async (): Promise<TaskResponse> => {
+    const { data } = await axiosClient.get<TaskResponse>('/tasks');
     return data;
   },
 

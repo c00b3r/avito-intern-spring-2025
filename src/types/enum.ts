@@ -6,7 +6,7 @@ enum TaskPriority {
 
 enum TaskStatus {
   Backlog = 'Backlog',
-  InProgress = 'In Progress',
+  InProgress = 'InProgress',
   Done = 'Done',
 }
 
