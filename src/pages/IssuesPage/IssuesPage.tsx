@@ -11,21 +11,18 @@ import {
   Tag,
 } from 'antd';
 import { useTasks } from '../../api/hooks/tasks/queries';
-import { LoadingOutlined } from '@ant-design/icons';
-import { TaskStatus } from '../../types/enum';
+import {
+  CarryOutOutlined,
+  FundProjectionScreenOutlined,
+  LoadingOutlined,
+} from '@ant-design/icons';
 import Title from 'antd/es/typography/Title';
-
-const statusColors = {
-  [TaskStatus.Backlog]: 'blue',
-  [TaskStatus.InProgress]: 'gold',
-  [TaskStatus.Done]: 'green',
-};
-
-const statusName = {
-  [TaskStatus.Backlog]: 'Бэклог',
-  [TaskStatus.InProgress]: 'В процессе',
-  [TaskStatus.Done]: 'Выполнено',
-};
+import {
+  statusColors,
+  statusName,
+  priorityColors,
+  priorityName,
+} from '../../const/issue';
 
 function IssuesPage() {
   const { data: tasks, error, isLoading } = useTasks();
@@ -62,8 +59,17 @@ function IssuesPage() {
         {tasks &&
           tasks.data.map((task) => (
             <Card key={task.id} hoverable className='w-full'>
-              <Tag color={statusColors[task.status]}>
+              <Tag
+                color={statusColors[task.status]}
+                icon={<CarryOutOutlined />}
+              >
                 {statusName[task.status]}
+              </Tag>
+              <Tag
+                color={priorityColors[task.priority]}
+                icon={<FundProjectionScreenOutlined />}
+              >
+                {priorityName[task.priority]}
               </Tag>
               <Title level={5}>{task.title}</Title>
             </Card>

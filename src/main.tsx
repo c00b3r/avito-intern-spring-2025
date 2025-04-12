@@ -3,12 +3,12 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import DefaultLayout from './layout/DefaultLayout';
-import BoardsPage from './pages/boards/BoardsPage';
-import IssuesPage from './pages/issues/IssuesPage';
+import BoardsPage from './pages/BoardsPage/BoardsPage';
+import IssuesPage from './pages/IssuesPage/IssuesPage';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './api/queryClient';
 import '@ant-design/v5-patch-for-react-19';
-import BoardPage from './pages/board/BoardPage';
+import BoardPage from './pages/BoardPage/BoardPage';
 const route = createBrowserRouter([
   {
     path: '',

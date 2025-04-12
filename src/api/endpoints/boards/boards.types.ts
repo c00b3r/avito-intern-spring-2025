@@ -27,4 +27,8 @@ interface BoardResponse {
   data: Board[];
 }
 
-export type { BoardResponse, Board, BoardTask };
+interface BoardTaskResponse {
+  data: BoardTask[];
+}
+
+export type { BoardResponse, Board, BoardTask, BoardTaskResponse };
