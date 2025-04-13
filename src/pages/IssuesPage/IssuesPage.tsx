@@ -90,6 +90,7 @@ function IssuesPage() {
           mode={modeModal}
           isOpen={isModalOpen}
           setIsOpen={() => {
+            setModeModal('edit');
             setIsModalOpen(false);
             setSelectedTask(null);
           }}

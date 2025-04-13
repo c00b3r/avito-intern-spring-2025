@@ -29,15 +29,18 @@ function ModalTask({ mode, isOpen, setIsOpen, initialData }: ModalTaskProps) {
     if (isOpen) {
       form.resetFields();
       if (initialData) {
-        form.setFieldsValue(initialData);
+        form.setFieldsValue({
+          ...initialData,
+          assignee: initialData.assignee.id,
+        });
       } else {
         form.setFieldsValue({
-          title: '',
-          description: '',
-          boardName: '',
-          priority: '',
-          status: '',
-          assignee: '',
+          title: null,
+          description: null,
+          boardName: null,
+          priority: null,
+          status: null,
+          assignee: null,
         });
       }
     }
@@ -106,15 +109,12 @@ function ModalTask({ mode, isOpen, setIsOpen, initialData }: ModalTaskProps) {
           </Select>
         </Form.Item>
         <Form.Item
-          name='assignee.id'
+          name='assignee'
           rules={[{ required: true, message: 'Выберите исполнителя' }]}
         >
-          <Select
-            placeholder='Выберите исполнителя'
-            defaultValue={initialData?.assignee.id}
-          >
+          <Select placeholder='Выберите исполнителя'>
             {users?.data.map((user) => (
-              <Select.Option value={user.id}>
+              <Select.Option value={user.id} key={user.id}>
                 <Flex align='center' gap='small'>
                   <Avatar src={user.avatarUrl} size={24} />
                   {user.fullName}
