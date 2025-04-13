@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router';
 const BoardsPage = () => {
   const { data: boards, isLoading, error } = useBoards();
   const boardsData = boards?.data || null;
+
   const navigate = useNavigate();
 
   if (isLoading) {
@@ -31,10 +32,10 @@ const BoardsPage = () => {
         <Badge color='blue' count={boardsData?.length || 0}>
           <Title level={3}>Проекты</Title>
         </Badge>
-        <Flex vertical gap={'small'} className='w-[50%] overflow-y-auto'>
+        <Flex vertical gap={'small'} className=' overflow-y-auto relative'>
           {boardsData ? (
             boardsData.map((board) => (
-              <Card key={board.id}>
+              <Card key={board.id} className='w-[50%]'>
                 <Flex justify='space-between'>
                   <Title level={4}>{board.name}</Title>
                   <Button

@@ -9,21 +9,11 @@ import {
   Input,
   Space,
   Spin,
-  Tag,
 } from 'antd';
 import { useTasks } from '../../api/hooks/tasks/queries';
-import {
-  CarryOutOutlined,
-  FundProjectionScreenOutlined,
-  LoadingOutlined,
-} from '@ant-design/icons';
+import { LoadingOutlined } from '@ant-design/icons';
 import Title from 'antd/es/typography/Title';
-import {
-  statusColors,
-  statusName,
-  priorityColors,
-  priorityName,
-} from '../../const/issue';
+import Task from '../../component/Task/Task';
 
 function IssuesPage() {
   const { data: tasks, error, isLoading } = useTasks();
@@ -60,23 +50,7 @@ function IssuesPage() {
         </Flex>
         <Flex vertical className='h-[75vh] overflow-y-auto p-4!' gap='small'>
           {tasksData ? (
-            tasksData.map((task) => (
-              <Card key={task.id} hoverable className='w-full'>
-                <Tag
-                  color={statusColors[task.status]}
-                  icon={<CarryOutOutlined />}
-                >
-                  {statusName[task.status]}
-                </Tag>
-                <Tag
-                  color={priorityColors[task.priority]}
-                  icon={<FundProjectionScreenOutlined />}
-                >
-                  {priorityName[task.priority]}
-                </Tag>
-                <Title level={5}>{task.title}</Title>
-              </Card>
-            ))
+            tasksData.map((task) => <Task task={task} />)
           ) : (
             <Empty description='Нет задач' />
           )}

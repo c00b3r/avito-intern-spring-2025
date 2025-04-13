@@ -4,6 +4,7 @@ import { Alert, Card, Flex, Space, Spin } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { LoadingOutlined } from '@ant-design/icons';
 import useTasksByStatus from '../../hooks/useTasksByStatus';
+import Task from '../../component/Task/Task';
 
 function BoardPage() {
   const { id = '' } = useParams();
@@ -30,33 +31,27 @@ function BoardPage() {
   }
 
   return (
-    <Card>
+    <Card className='min-h-[75vh]'>
       <Title level={3}>{boardTitle}</Title>
       <Flex gap='small' justify='space-between'>
         <Card title='Бэклог' className='w-1/3'>
           <Space direction='vertical' className='w-full'>
             {backlogTasks?.map((task) => (
-              <Card key={task.id} hoverable draggable className='w-[100%]'>
-                {task.title}
-              </Card>
+              <Task key={task.id} task={task} />
             ))}
           </Space>
         </Card>
         <Card title='В процессе' className='w-1/3'>
           <Space direction='vertical' className='w-full'>
             {inProgressTasks?.map((task) => (
-              <Card key={task.id} hoverable draggable>
-                {task.title}
-              </Card>
+              <Task key={task.id} task={task} />
             ))}
           </Space>
         </Card>
         <Card title='Выполнено' className='w-1/3'>
           <Space direction='vertical' className='w-full'>
             {doneTasks?.map((task) => (
-              <Card key={task.id} hoverable draggable>
-                {task.title}
-              </Card>
+              <Task key={task.id} task={task} />
             ))}
           </Space>
         </Card>
