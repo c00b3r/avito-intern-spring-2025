@@ -4,7 +4,6 @@ import { Alert, Card, Flex, Space, Spin } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { LoadingOutlined } from '@ant-design/icons';
 import useTasksByStatus from '../../hooks/useTasksByStatus';
-import Task from '../../component/Task/Task';
 
 function BoardPage() {
   const { id = '' } = useParams();
@@ -37,21 +36,27 @@ function BoardPage() {
         <Card title='Бэклог' className='w-1/3'>
           <Space direction='vertical' className='w-full'>
             {backlogTasks?.map((task) => (
-              <Task key={task.id} task={task} />
+              <Card key={task.id}>
+                <Title level={5}>{task.title}</Title>
+              </Card>
             ))}
           </Space>
         </Card>
         <Card title='В процессе' className='w-1/3'>
           <Space direction='vertical' className='w-full'>
             {inProgressTasks?.map((task) => (
-              <Task key={task.id} task={task} />
+              <Card key={task.id}>
+                <Title level={5}>{task.title}</Title>
+              </Card>
             ))}
           </Space>
         </Card>
         <Card title='Выполнено' className='w-1/3'>
           <Space direction='vertical' className='w-full'>
             {doneTasks?.map((task) => (
-              <Task key={task.id} task={task} />
+              <Card key={task.id}>
+                <Title level={5}>{task.title}</Title>
+              </Card>
             ))}
           </Space>
         </Card>

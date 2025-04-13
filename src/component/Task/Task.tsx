@@ -11,22 +11,39 @@ import {
   priorityName,
 } from '../../const/issue';
 import Title from 'antd/es/typography/Title';
-import { BoardTask } from '../../api/endpoints/boards/boards.types';
 
-function Task({ task }: { task: Task | BoardTask }) {
+function Task({
+  task,
+  onSelect,
+  setOpenModal,
+}: {
+  task: Task;
+  onSelect: (task: Task) => void;
+  setOpenModal: (isOpen: boolean) => void;
+}) {
   return (
-    <Card key={task.id} hoverable className='w-full'>
-      <Tag color={statusColors[task.status]} icon={<CarryOutOutlined />}>
-        {statusName[task.status]}
-      </Tag>
-      <Tag
-        color={priorityColors[task.priority]}
-        icon={<FundProjectionScreenOutlined />}
+    <>
+      <Card
+        key={task.id}
+        hoverable
+        className='w-full mb-2!'
+        onClick={() => {
+          onSelect(task);
+          setOpenModal(true);
+        }}
       >
-        {priorityName[task.priority]}
-      </Tag>
-      <Title level={5}>{task.title}</Title>
-    </Card>
+        <Tag color={statusColors[task.status]} icon={<CarryOutOutlined />}>
+          {statusName[task.status]}
+        </Tag>
+        <Tag
+          color={priorityColors[task.priority]}
+          icon={<FundProjectionScreenOutlined />}
+        >
+          {priorityName[task.priority]}
+        </Tag>
+        <Title level={5}>{task.title}</Title>
+      </Card>
+    </>
   );
 }
 

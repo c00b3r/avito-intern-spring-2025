@@ -8,7 +8,7 @@ export const tasksApi = {
     return data;
   },
 
-  getTaskById: async (taskId: string): Promise<Task> => {
+  getTaskById: async (taskId: number): Promise<Task> => {
     const { data } = await axiosClient.get<Task>(`/tasks/${taskId}`);
     return data;
   },
@@ -18,7 +18,7 @@ export const tasksApi = {
     return data;
   },
 
-  updateTask: async (taskId: string, task: CreateTask): Promise<Task> => {
+  updateTask: async (taskId: number, task: CreateTask): Promise<Task> => {
     const { data } = await axiosClient.put<Task>(
       `/tasks/update/${taskId}`,
       task
@@ -27,7 +27,7 @@ export const tasksApi = {
   },
 
   updateTaskStatus: async (
-    taskId: string,
+    taskId: number,
     status: TaskStatus
   ): Promise<Task> => {
     const { data } = await axiosClient.put<Task>(

@@ -6,7 +6,7 @@ export const boardsApi = {
     const response = await axiosClient.get<BoardResponse>('/boards');
     return response.data;
   },
-  getBoardById: async (boardId: string) => {
+  getBoardById: async (boardId: number) => {
     const response = await axiosClient.get<BoardTaskResponse>(
       `/boards/${boardId}`
     );

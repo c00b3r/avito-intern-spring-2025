@@ -10,7 +10,7 @@ export const useTasks = () => {
   });
 };
 
-export const useTask = (taskId: string) => {
+export const useTask = (taskId: number) => {
   return useQuery({
     queryKey: ['task', taskId],
     queryFn: () => tasksApi.getTaskById(taskId),
@@ -29,7 +29,7 @@ export const useUpdateTask = () => {
       taskId,
       newTask,
     }: {
-      taskId: string;
+      taskId: number;
       newTask: CreateTask;
     }) => tasksApi.updateTask(taskId, newTask),
   });
@@ -41,7 +41,7 @@ export const useUpdateTaskStatus = () => {
       taskId,
       newStatus,
     }: {
-      taskId: string;
+      taskId: number;
       newStatus: TaskStatus;
     }) => tasksApi.updateTaskStatus(taskId, newStatus),
   });
