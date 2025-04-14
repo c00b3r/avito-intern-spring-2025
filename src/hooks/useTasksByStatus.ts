@@ -1,6 +1,6 @@
 import { useBoard } from '../api/hooks/boards/queries';
 
-function useTasksByStatus(boardId: string) {
+function useTasksByStatus(boardId: number) {
   const { data: tasks, error, isLoading } = useBoard(boardId);
 
   const backlogTasks = tasks?.data.filter((task) => task.status === 'Backlog');

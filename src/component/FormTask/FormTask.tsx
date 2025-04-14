@@ -10,12 +10,14 @@ interface FormTaskProps<T extends CreateTask | UpdateTask> {
   initialData: T | null;
   handleSubmit: (values: T) => void;
   isLoading: boolean;
+  fromBoard?: boolean;
 }
 
 function FormTask<T extends CreateTask>({
   initialData,
   handleSubmit,
   isLoading,
+  fromBoard = false,
 }: FormTaskProps<T>) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -54,7 +56,7 @@ function FormTask<T extends CreateTask>({
           name='boardId'
           rules={[{ required: true, message: 'Выберите проект' }]}
         >
-          <Select placeholder='Выберите проект'>
+          <Select placeholder='Выберите проект' disabled={fromBoard}>
             {boards?.data.map((board) => (
               <Select.Option value={board.id}>{board.name}</Select.Option>
             ))}
@@ -99,7 +101,7 @@ function FormTask<T extends CreateTask>({
         </Form.Item>
         <Flex justify='space-between' gap='middle'>
           <Button
-            disabled={!('boardId' in (initialData || {}))}
+            disabled={!('boardId' in (initialData || {})) || fromBoard}
             onClick={() =>
               navigate(`/board/${(initialData as CreateTask)?.boardId}`)
             }

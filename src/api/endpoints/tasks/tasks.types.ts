@@ -35,6 +35,7 @@ interface UpdateTask {
   priority: TaskPriority;
   status: TaskStatus;
   title: string;
+  boardId: number;
 }
 
 interface UpdateTaskStatus {

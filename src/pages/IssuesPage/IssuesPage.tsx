@@ -14,10 +14,11 @@ import {
 import { useTasks } from '../../api/hooks/tasks/queries';
 import { LoadingOutlined } from '@ant-design/icons';
 import Title from 'antd/es/typography/Title';
-import Task from '../../component/Task/Task';
 import { useState } from 'react';
 import CreateTaskModal from '../../component/ModalTask/CreateTaskModal';
 import UpdateTaskModal from '../../component/ModalTask/UpdateTaskModal';
+import TaskItem from '../../component/TaskItem/TaskItem';
+import { Task } from '../../api/endpoints/tasks/tasks.types';
 
 function IssuesPage() {
   const { data: tasks, error, isLoading } = useTasks();
@@ -83,10 +84,11 @@ function IssuesPage() {
           {tasksData ? (
             <List
               dataSource={tasksData}
+              loading={isLoading}
               renderItem={(task) => (
-                <Task
+                <TaskItem
                   task={task}
-                  onSelect={() => console.log}
+                  // onSelect={() => console.log}
                   setOpenModal={() => {
                     setIsModalUpdateOpen(true);
                     setSelectedTask(task);
@@ -94,8 +96,9 @@ function IssuesPage() {
                 />
               )}
               pagination={{
-                position: 'top',
-                pageSize: 10,
+                position: 'bottom',
+                align: 'center',
+                pageSize: 5,
                 total: tasksData.length,
                 showTotal: (total, range) =>
                   `${range[0]}-${range[1]} из ${total} задач`,

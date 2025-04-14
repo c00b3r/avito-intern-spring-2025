@@ -2,7 +2,7 @@ import {
   CarryOutOutlined,
   FundProjectionScreenOutlined,
 } from '@ant-design/icons';
-import { Card, Tag } from 'antd';
+import { Avatar, Card, Tag } from 'antd';
 import type { Task } from '../../api/endpoints/tasks/tasks.types';
 import {
   statusColors,
@@ -11,16 +11,14 @@ import {
   priorityName,
 } from '../../const/issue';
 import Title from 'antd/es/typography/Title';
+import { BoardTask } from '../../api/endpoints/boards/boards.types';
 
-function Task({
-  task,
-  onSelect,
-  setOpenModal,
-}: {
-  task: Task;
-  onSelect: (task: Task) => void;
+interface TaskProps {
+  task: Task | BoardTask;
   setOpenModal: (isOpen: boolean) => void;
-}) {
+}
+
+function TaskItem({ task, setOpenModal }: TaskProps) {
   return (
     <>
       <Card
@@ -28,7 +26,6 @@ function Task({
         hoverable
         className='w-full mb-2!'
         onClick={() => {
-          onSelect(task);
           setOpenModal(true);
         }}
       >
@@ -41,10 +38,11 @@ function Task({
         >
           {priorityName[task.priority]}
         </Tag>
+        <Avatar src={task.assignee.avatarUrl} size={24} />
         <Title level={5}>{task.title}</Title>
       </Card>
     </>
   );
 }
 
-export default Task;
+export default TaskItem;

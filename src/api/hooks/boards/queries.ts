@@ -8,7 +8,7 @@ export const useBoards = () => {
   });
 };
 
-export const useBoard = (boardId: string) => {
+export const useBoard = (boardId: number) => {
   return useQuery({
     queryKey: ['board', boardId],
     queryFn: () => boardsApi.getBoardById(boardId),
