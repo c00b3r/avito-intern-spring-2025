@@ -36,7 +36,12 @@ function IssuesPage() {
       const matchesSearch =
         !filters.search ||
         task.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-        task.description?.toLowerCase().includes(filters.search.toLowerCase());
+        task.description
+          ?.toLowerCase()
+          .includes(filters.search.toLowerCase()) ||
+        task.assignee.fullName
+          .toLowerCase() 
+          .includes(filters.search.toLowerCase());
 
       return matchesStatus && matchesBoard && matchesSearch;
     });
