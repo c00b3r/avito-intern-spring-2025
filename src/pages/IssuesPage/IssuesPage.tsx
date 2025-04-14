@@ -16,14 +16,15 @@ import { LoadingOutlined } from '@ant-design/icons';
 import Title from 'antd/es/typography/Title';
 import Task from '../../component/Task/Task';
 import { useState } from 'react';
-import ModalTask from '../../component/ModalTask/ModalTask';
+import CreateTaskModal from '../../component/ModalTask/CreateTaskModal';
+import UpdateTaskModal from '../../component/ModalTask/UpdateTaskModal';
 
 function IssuesPage() {
   const { data: tasks, error, isLoading } = useTasks();
   const tasksData = tasks?.data || null;
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modeModal, setModeModal] = useState<'create' | 'edit'>('create');
+  const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -43,7 +44,20 @@ function IssuesPage() {
 
   return (
     <Card>
-      <Space direction='vertical' className='w-full'>
+      <Space direction='vertical' className='w-full' size={0}>
+        {isModalCreateOpen && (
+          <CreateTaskModal
+            isOpen={isModalCreateOpen}
+            handleClose={() => setIsModalCreateOpen(false)}
+          />
+        )}
+        {selectedTask && (
+          <UpdateTaskModal
+            isOpen={isModalUpdateOpen}
+            handleClose={() => setIsModalUpdateOpen(false)}
+            task={selectedTask}
+          />
+        )}
         <Flex justify='space-between'>
           <Badge color='blue' count={tasksData?.length || 0}>
             <Title level={3}>Задачи</Title>
@@ -54,23 +68,29 @@ function IssuesPage() {
             <Button
               type='primary'
               onClick={() => {
-                setIsModalOpen(true);
-                setModeModal('create');
+                setIsModalCreateOpen(true);
               }}
             >
               Добавить задачу
             </Button>
           </Flex>
         </Flex>
-        <Flex vertical className='h-[75vh] overflow-y-auto p-2!' gap='small'>
+        <Flex
+          vertical
+          className='h-[75vh] overflow-y-auto p-[2px]!'
+          gap='small'
+        >
           {tasksData ? (
             <List
               dataSource={tasksData}
               renderItem={(task) => (
                 <Task
                   task={task}
-                  onSelect={setSelectedTask}
-                  setOpenModal={setIsModalOpen}
+                  onSelect={() => console.log}
+                  setOpenModal={() => {
+                    setIsModalUpdateOpen(true);
+                    setSelectedTask(task);
+                  }}
                 />
               )}
               pagination={{
@@ -86,16 +106,6 @@ function IssuesPage() {
             <Empty description='Нет задач' />
           )}
         </Flex>
-        <ModalTask
-          mode={modeModal}
-          isOpen={isModalOpen}
-          setIsOpen={() => {
-            setModeModal('edit');
-            setIsModalOpen(false);
-            setSelectedTask(null);
-          }}
-          initialData={selectedTask || undefined}
-        />
       </Space>
     </Card>
   );

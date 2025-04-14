@@ -1,65 +1,39 @@
-import { Modal, Form, Input, Select, Button, Flex, Avatar } from 'antd';
-import { Task } from '../../api/endpoints/tasks/tasks.types';
+import { Input, Select, Flex, Avatar, Button, Form } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import Title from 'antd/es/typography/Title';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router';
 import { TaskPriority, TaskStatus } from '../../types/enum';
+import { useNavigate } from 'react-router';
 import { useBoards } from '../../api/hooks/boards/queries';
 import { useUsers } from '../../api/hooks/users/queries';
+import { CreateTask, UpdateTask } from '../../api/endpoints/tasks/tasks.types';
 
-interface ModalTaskProps {
-  mode: 'create' | 'edit';
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
-  initialData?: Task;
+interface FormTaskProps<T extends CreateTask | UpdateTask> {
+  initialData: T | null;
+  handleSubmit: (values: T) => void;
+  isLoading: boolean;
 }
 
-function ModalTask({ mode, isOpen, setIsOpen, initialData }: ModalTaskProps) {
+function FormTask<T extends CreateTask>({
+  initialData,
+  handleSubmit,
+  isLoading,
+}: FormTaskProps<T>) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+
   const { data: boards } = useBoards();
   const { data: users } = useUsers();
 
-  const handleClose = () => {
-    setIsOpen(false);
-  };
-
-  useEffect(() => {
-    if (isOpen) {
-      form.resetFields();
-      if (initialData) {
-        form.setFieldsValue({
-          ...initialData,
-          assignee: initialData.assignee.id,
-        });
-      } else {
-        form.setFieldsValue({
-          title: null,
-          description: null,
-          boardName: null,
-          priority: null,
-          status: null,
-          assignee: null,
-        });
-      }
-    }
-  }, [isOpen, initialData, form]);
-
-  const handleSubmit = (values: Task) => {
-    console.log(values);
+  const handleSubmitForm = async (values: T) => {
+    handleSubmit(values);
   };
 
   return (
-    <Modal open={isOpen} onCancel={handleClose} footer={null}>
-      <Title level={5} className='mb-4!'>
-        {mode === 'create' ? 'Создание задачи' : 'Редактирование задачи'}
-      </Title>
+    <>
       <Form
         form={form}
         layout='vertical'
-        initialValues={initialData}
-        onFinish={handleSubmit}
+        initialValues={initialData || undefined}
+        onFinish={handleSubmitForm}
       >
         <Form.Item
           name='title'
@@ -77,7 +51,7 @@ function ModalTask({ mode, isOpen, setIsOpen, initialData }: ModalTaskProps) {
           />
         </Form.Item>
         <Form.Item
-          name='boardName'
+          name='boardId'
           rules={[{ required: true, message: 'Выберите проект' }]}
         >
           <Select placeholder='Выберите проект'>
@@ -109,7 +83,7 @@ function ModalTask({ mode, isOpen, setIsOpen, initialData }: ModalTaskProps) {
           </Select>
         </Form.Item>
         <Form.Item
-          name='assignee'
+          name='assigneeId'
           rules={[{ required: true, message: 'Выберите исполнителя' }]}
         >
           <Select placeholder='Выберите исполнителя'>
@@ -125,20 +99,22 @@ function ModalTask({ mode, isOpen, setIsOpen, initialData }: ModalTaskProps) {
         </Form.Item>
         <Flex justify='space-between' gap='middle'>
           <Button
-            disabled={mode === 'create'}
-            onClick={() => navigate(`/board/${initialData?.boardId}`)}
+            disabled={!('boardId' in (initialData || {}))}
+            onClick={() =>
+              navigate(`/board/${(initialData as CreateTask)?.boardId}`)
+            }
           >
             Перейти к проекту
           </Button>
           <Form.Item>
-            <Button type='primary' htmlType='submit'>
-              {mode === 'create' ? 'Создать' : 'Обновить'}
+            <Button type='primary' htmlType='submit' loading={isLoading}>
+              {initialData === null ? 'Создать' : 'Обновить'}
             </Button>
           </Form.Item>
         </Flex>
       </Form>
-    </Modal>
+    </>
   );
 }
 
-export default ModalTask;
+export default FormTask;

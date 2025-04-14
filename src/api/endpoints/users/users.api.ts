@@ -6,4 +6,8 @@ export const usersApi = {
     const { data } = await axiosClient.get<UserResponse>('/users');
     return data;
   },
+  getUserById: async (userId: number): Promise<UserResponse> => {
+    const { data } = await axiosClient.get<UserResponse>(`/users/${userId}`);
+    return data;
+  },
 };

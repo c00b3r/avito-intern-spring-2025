@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { tasksApi } from '../../endpoints/tasks/tasks.api';
-import { CreateTask } from '../../endpoints/tasks/tasks.types';
+import { CreateTask, UpdateTask } from '../../endpoints/tasks/tasks.types';
 import { TaskStatus } from '../../../types/enum';
 
 export const useTasks = () => {
@@ -30,7 +30,7 @@ export const useUpdateTask = () => {
       newTask,
     }: {
       taskId: number;
-      newTask: CreateTask;
+      newTask: UpdateTask;
     }) => tasksApi.updateTask(taskId, newTask),
   });
 };

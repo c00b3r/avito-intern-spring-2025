@@ -1,6 +1,6 @@
 import { TaskStatus } from '../../../types/enum';
 import { axiosClient } from '../../axios/axios-client';
-import { CreateTask, Task, TaskResponse } from './tasks.types';
+import { CreateTask, Task, TaskResponse, UpdateTask } from './tasks.types';
 
 export const tasksApi = {
   getAllTasks: async (): Promise<TaskResponse> => {
@@ -18,7 +18,7 @@ export const tasksApi = {
     return data;
   },
 
-  updateTask: async (taskId: number, task: CreateTask): Promise<Task> => {
+  updateTask: async (taskId: number, task: UpdateTask): Promise<Task> => {
     const { data } = await axiosClient.put<Task>(
       `/tasks/update/${taskId}`,
       task

@@ -25,6 +25,15 @@ interface CreateTask {
   boardId: number;
   description: string;
   priority: TaskPriority;
+  status?: TaskStatus;
+  title: string;
+}
+
+interface UpdateTask {
+  assigneeId: number;
+  description: string;
+  priority: TaskPriority;
+  status: TaskStatus;
   title: string;
 }
 
@@ -32,4 +41,4 @@ interface UpdateTaskStatus {
   status: TaskStatus;
 }
 
-export type { Task, CreateTask, UpdateTaskStatus, TaskResponse };
+export type { Task, CreateTask, UpdateTask, UpdateTaskStatus, TaskResponse };

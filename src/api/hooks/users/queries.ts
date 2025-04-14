@@ -7,3 +7,10 @@ export const useUsers = () => {
     queryFn: () => usersApi.getAllUsers(),
   });
 };
+
+export const useUser = (userId: number) => {
+  return useQuery({
+    queryKey: ['user', userId],
+    queryFn: () => usersApi.getUserById(userId),
+  });
+};

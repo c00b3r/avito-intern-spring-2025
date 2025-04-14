@@ -1,7 +1,7 @@
 import { Button } from 'antd';
 import { NavLink } from 'react-router';
-import ModalTask from '../ModalTask/ModalTask';
 import { useState } from 'react';
+import CreateTaskModal from '../ModalTask/CreateTaskModal';
 
 function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,11 +21,12 @@ function Header() {
       >
         Создать задачу
       </Button>
-      <ModalTask
-        mode='create'
-        isOpen={isModalOpen}
-        setIsOpen={setIsModalOpen}
-      />
+      {isModalOpen && (
+        <CreateTaskModal
+          isOpen={isModalOpen}
+          handleClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
