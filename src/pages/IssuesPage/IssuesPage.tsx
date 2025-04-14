@@ -1,28 +1,47 @@
-import {
-  Alert,
-  Badge,
-  Button,
-  Card,
-  Cascader,
-  Empty,
-  Flex,
-  Input,
-  List,
-  Space,
-  Spin,
-} from 'antd';
+import { Alert, Card, Space, Spin } from 'antd';
 import { useTasks } from '../../api/hooks/tasks/queries';
 import { LoadingOutlined } from '@ant-design/icons';
-import Title from 'antd/es/typography/Title';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import CreateTaskModal from '../../component/ModalTask/CreateTaskModal';
 import UpdateTaskModal from '../../component/ModalTask/UpdateTaskModal';
-import TaskItem from '../../component/TaskItem/TaskItem';
 import { Task } from '../../api/endpoints/tasks/tasks.types';
+import { useBoards } from '../../api/hooks/boards/queries';
+import TaskFilters from '../../component/TaskFilters/TaskFilters';
+import TaskList from '../../component/TaskList/TaskList';
+import { Filters } from '../../types/interface';
 
 function IssuesPage() {
   const { data: tasks, error, isLoading } = useTasks();
-  const tasksData = tasks?.data || null;
+  const { data: boards } = useBoards();
+
+  const [filters, setFilters] = useState<Filters>({
+    status: '',
+    boardId: '',
+    search: '',
+  });
+
+  const handleFilterChange = (key: keyof Filters, value: string | number) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+  const filteredTasks = useMemo(() => {
+    const tasksData = tasks?.data || [];
+
+    return tasksData.filter((task) => {
+      const matchesStatus = !filters.status || task.status === filters.status;
+      const matchesBoard = !filters.boardId || task.boardId === filters.boardId;
+      const matchesSearch =
+        !filters.search ||
+        task.title.toLowerCase().includes(filters.search.toLowerCase()) ||
+        task.description?.toLowerCase().includes(filters.search.toLowerCase());
+
+      return matchesStatus && matchesBoard && matchesSearch;
+    });
+  }, [filters.boardId, filters.search, filters.status, tasks?.data]);
+
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
@@ -59,56 +78,20 @@ function IssuesPage() {
             task={selectedTask}
           />
         )}
-        <Flex justify='space-between'>
-          <Badge color='blue' count={tasksData?.length || 0}>
-            <Title level={3}>Задачи</Title>
-          </Badge>
-          <Flex gap='middle'>
-            <Input placeholder='Поиск' className='h-[32px]' />
-            <Cascader className='h-[32px]' />
-            <Button
-              type='primary'
-              onClick={() => {
-                setIsModalCreateOpen(true);
-              }}
-            >
-              Добавить задачу
-            </Button>
-          </Flex>
-        </Flex>
-        <Flex
-          vertical
-          className='h-[75vh] overflow-y-auto p-[2px]!'
-          gap='small'
-        >
-          {tasksData ? (
-            <List
-              dataSource={tasksData}
-              loading={isLoading}
-              renderItem={(task) => (
-                <TaskItem
-                  task={task}
-                  // onSelect={() => console.log}
-                  setOpenModal={() => {
-                    setIsModalUpdateOpen(true);
-                    setSelectedTask(task);
-                  }}
-                />
-              )}
-              pagination={{
-                position: 'bottom',
-                align: 'center',
-                pageSize: 5,
-                total: tasksData.length,
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} из ${total} задач`,
-                className: 'mb-2!',
-              }}
-            />
-          ) : (
-            <Empty description='Нет задач' />
-          )}
-        </Flex>
+        <TaskFilters
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          boards={boards?.data}
+          totalTasks={filteredTasks.length}
+          onCreateTask={() => setIsModalCreateOpen(true)}
+        />
+        <TaskList
+          tasks={filteredTasks}
+          onTaskClick={(task) => {
+            setSelectedTask(task);
+            setIsModalUpdateOpen(true);
+          }}
+        />
       </Space>
     </Card>
   );

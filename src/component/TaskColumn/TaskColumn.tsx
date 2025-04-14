@@ -10,7 +10,7 @@ interface TaskColumnProps {
 
 function TaskColumn({ title, tasks, onTaskClick }: TaskColumnProps) {
   return (
-    <Card title={title} className='w-1/3'>
+    <Card title={title} className='w-1/3 border-black!'>
       <Space direction='vertical' className='w-full'>
         {tasks?.map((task) => (
           <TaskCard key={task.id} task={task} onClick={onTaskClick} />

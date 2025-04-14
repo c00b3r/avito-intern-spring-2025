@@ -1,12 +1,13 @@
 import { useParams } from 'react-router';
 import { useBoards } from '../../api/hooks/boards/queries';
-import { Card, Flex } from 'antd';
+import { Alert, Card, Flex, Spin } from 'antd';
 import Title from 'antd/es/typography/Title';
 import useTasksByStatus from '../../hooks/useTasksByStatus';
 import { useState } from 'react';
 import UpdateTaskModal from '../../component/ModalTask/UpdateTaskModal';
 import { BoardTask } from '../../api/endpoints/boards/boards.types';
 import TaskColumn from '../../component/TaskColumn/TaskColumn';
+import { LoadingOutlined } from '@ant-design/icons';
 
 function BoardPage() {
   const { id = '' } = useParams();
@@ -23,39 +24,53 @@ function BoardPage() {
     setIsModalUpdateOpen(true);
   };
 
+  if (isLoading) {
+    return (
+      <div className='h-full flex justify-center items-center'>
+        <Spin indicator={<LoadingOutlined />} size='large' />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className='h-full flex justify-center items-center'>
+        <Alert message='Ошибка загрузки проекта' type='error' showIcon />
+      </div>
+    );
+  }
+
   return (
     <>
-      {!isLoading && !error && (
-        <Card>
-          <Title level={3}>{boardTitle}</Title>
-          {selectedTask && (
-            <UpdateTaskModal
-              isOpen={isModalUpdateOpen}
-              handleClose={() => setIsModalUpdateOpen(false)}
-              task={selectedTask}
-              boardId={+id}
-              fromBoard={true}
-            />
-          )}
-          <Flex gap='small' justify='space-between'>
-            <TaskColumn
-              title='Бэклог'
-              tasks={backlogTasks}
-              onTaskClick={handleTaskClick}
-            />
-            <TaskColumn
-              title='В процессе'
-              tasks={inProgressTasks}
-              onTaskClick={handleTaskClick}
-            />
-            <TaskColumn
-              title='Выполнено'
-              tasks={doneTasks}
-              onTaskClick={handleTaskClick}
-            />
-          </Flex>
-        </Card>
-      )}
+      <Card>
+        <Title level={3}>{boardTitle}</Title>
+        {selectedTask && (
+          <UpdateTaskModal
+            isOpen={isModalUpdateOpen}
+            handleClose={() => setIsModalUpdateOpen(false)}
+            task={selectedTask}
+            boardId={+id}
+            fromBoard={true}
+          />
+        )}
+        <Flex gap='small' justify='space-between'>
+          <TaskColumn
+            title='Бэклог'
+            tasks={backlogTasks}
+            onTaskClick={handleTaskClick}
+          />
+          <TaskColumn
+            title='В процессе'
+            tasks={inProgressTasks}
+            onTaskClick={handleTaskClick}
+          />
+          <TaskColumn
+            title='Выполнено'
+            tasks={doneTasks}
+            onTaskClick={handleTaskClick}
+          />
+        </Flex>
+      </Card>
     </>
   );
 }
