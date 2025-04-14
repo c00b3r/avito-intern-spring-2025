@@ -24,6 +24,7 @@
     "noImplicitOverride": true,
     "noImplicitAny": true,
 
+    "types": ["vitest/globals", "node"]
   },
   "include": ["src"]
 }
