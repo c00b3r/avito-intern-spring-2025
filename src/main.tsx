@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import { createBrowserRouter, RouterProvider } from 'react-router';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router';
 import DefaultLayout from './layout/DefaultLayout';
 import BoardsPage from './pages/BoardsPage/BoardsPage';
 import IssuesPage from './pages/IssuesPage/IssuesPage';
@@ -26,6 +26,10 @@ const route = createBrowserRouter([
       {
         path: '/board/:id',
         element: <BoardPage />,
+      },
+      {
+        path: '*',
+        element: <Navigate to='/issues' />,
       },
     ],
   },
