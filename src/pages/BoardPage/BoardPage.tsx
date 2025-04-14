@@ -1,4 +1,4 @@
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { useBoards } from '../../api/hooks/boards/queries';
 import { Alert, Card, Flex, Spin } from 'antd';
 import Title from 'antd/es/typography/Title';
@@ -16,6 +16,11 @@ function BoardPage() {
     useTasksByStatus(+id);
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<BoardTask | null>(null);
+
+  const navigate = useNavigate();
+  if (!boards?.data.some((elem) => elem.id === +id)) {
+    navigate('/boards');
+  }
 
   const boardTitle = boards?.data.find((b) => String(b.id) === id)?.name;
 
