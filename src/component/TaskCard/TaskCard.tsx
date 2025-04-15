@@ -9,8 +9,7 @@ interface TaskCardProps {
 }
 
 function TaskCard({ task, onClick, onDragStart }: TaskCardProps) {
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
-    e.dataTransfer.setData('text/plain', task.id.toString());
+  const handleDragStart = () => {
     onDragStart(task);
   };
 

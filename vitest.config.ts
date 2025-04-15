@@ -9,6 +9,8 @@ export default defineConfig({
     setupFiles: ['./src/tests/setup.ts'],
     coverage: {
       reporter: ['text', 'html'],
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/tests/**', 'src/types', 'src/vite-env.d.ts', 'src/api'],
     },
   },
 });
