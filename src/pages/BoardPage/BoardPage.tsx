@@ -8,14 +8,20 @@ import UpdateTaskModal from '../../component/ModalTask/UpdateTaskModal';
 import { BoardTask } from '../../api/endpoints/boards/boards.types';
 import TaskColumn from '../../component/TaskColumn/TaskColumn';
 import { LoadingOutlined } from '@ant-design/icons';
+import { useUpdateTaskStatus } from '../../api/hooks/tasks/queries';
+import { TaskStatus } from '../../types/enum';
+import { useQueryClient } from '@tanstack/react-query';
 
 function BoardPage() {
+  const queryClient = useQueryClient();
   const { id = '' } = useParams();
   const { data: boards } = useBoards();
   const { backlogTasks, inProgressTasks, doneTasks, error, isLoading } =
     useTasksByStatus(+id);
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<BoardTask | null>(null);
+  const [draggedTask, setDraggedTask] = useState<BoardTask | null>(null);
+  const { mutate: updateTaskStatus } = useUpdateTaskStatus();
 
   const navigate = useNavigate();
   if (!boards?.data.some((elem) => elem.id === +id)) {
@@ -27,6 +33,19 @@ function BoardPage() {
   const handleTaskClick = (task: BoardTask) => {
     setSelectedTask(task);
     setIsModalUpdateOpen(true);
+  };
+
+  const handleDrop = async (status: TaskStatus) => {
+    if (!draggedTask) return;
+
+    updateTaskStatus(
+      { taskId: draggedTask.id, newStatus: status },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['board', +id] });
+        },
+      }
+    );
   };
 
   if (isLoading) {
@@ -63,16 +82,22 @@ function BoardPage() {
             title='Бэклог'
             tasks={backlogTasks}
             onTaskClick={handleTaskClick}
+            onDrop={() => handleDrop(TaskStatus.Backlog)}
+            onDragStart={setDraggedTask}
           />
           <TaskColumn
             title='В процессе'
             tasks={inProgressTasks}
             onTaskClick={handleTaskClick}
+            onDrop={() => handleDrop(TaskStatus.InProgress)}
+            onDragStart={setDraggedTask}
           />
           <TaskColumn
             title='Выполнено'
             tasks={doneTasks}
             onTaskClick={handleTaskClick}
+            onDrop={() => handleDrop(TaskStatus.Done)}
+            onDragStart={setDraggedTask}
           />
         </Flex>
       </Card>

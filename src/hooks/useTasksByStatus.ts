@@ -3,11 +3,13 @@ import { useBoard } from '../api/hooks/boards/queries';
 function useTasksByStatus(boardId: number) {
   const { data: tasks, error, isLoading } = useBoard(boardId);
 
-  const backlogTasks = tasks?.data.filter((task) => task.status === 'Backlog');
-  const inProgressTasks = tasks?.data.filter(
+  const sortedTasks = tasks?.data.sort((a, b) => a.id - b.id);
+
+  const backlogTasks = sortedTasks?.filter((task) => task.status === 'Backlog');
+  const inProgressTasks = sortedTasks?.filter(
     (task) => task.status === 'InProgress'
   );
-  const doneTasks = tasks?.data.filter((task) => task.status === 'Done');
+  const doneTasks = sortedTasks?.filter((task) => task.status === 'Done');
 
   return {
     backlogTasks,

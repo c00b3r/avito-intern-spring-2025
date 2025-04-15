@@ -32,8 +32,9 @@ export const tasksApi = {
   ): Promise<Task> => {
     const { data } = await axiosClient.put<Task>(
       `/tasks/updateStatus/${taskId}`,
-      status
+      { status }
     );
+
     return data;
   },
 };
